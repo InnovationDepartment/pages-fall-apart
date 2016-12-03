@@ -42,9 +42,8 @@ Particle.prototype.tick = function(blast) {
     distXS = distX * distX;
     distYS = distY * distY;
     distanceWithBlast = distXS + distYS;
-    force = 10000000 / distanceWithBlast;
-    //FIXME: Put back to 50
-    if (force > 20) force = 20;
+    force = 100000 / distanceWithBlast;
+    if (force > 50) force = 50;
     rad = Math.asin(distYS / distanceWithBlast);
     forceY = Math.sin(rad) * force * (distY < 0 ? -1 : 1);
     forceX = Math.cos(rad) * force * (distX < 0 ? -1 : 1);

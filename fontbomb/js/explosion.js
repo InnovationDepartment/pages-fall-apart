@@ -2,6 +2,7 @@ var __bind = require('./__bind')
 // var requestAnimationFrame = require('./requestAnimationFrame')
 var Particle = require('./particle')
 var Bomb = require('./bomb')
+var exploded = false;
 
 function Explosion() {
   this.tick = __bind(this.tick, this);
@@ -94,7 +95,9 @@ Explosion.prototype.explosifyEl = function(string) {
 }
 
 Explosion.prototype.explosifyText = function(string) {
-  var char, chars, index;
+  // wrap each phrase / block as a 'word'
+  // return "<word><particle style='display:inline-block;'>" + string + '&nbsp;' + "</particle></word>"
+
   chars = (function() {
     var _len2, _ref2, _results;
     _ref2 = string.split('');
@@ -126,13 +129,18 @@ Explosion.prototype.explosifyText = function(string) {
     return _results;
   })();
   return chars.join(' ');
+  return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char  + "</particle></word>"
+
 };
 
 Explosion.prototype.dropBomb = function(event) {
-  var pos;
-  pos = window.findClickPos(event);
-  this.bombs.push(new Bomb(pos.x, pos.y));
-  if (window.FONTBOMB_PREVENT_DEFAULT) return event.preventDefault();
+  if(!exploded) {
+    var pos;
+    pos = window.findClickPos(event);
+    this.bombs.push(new Bomb(pos.x, pos.y));
+    if (window.FONTBOMB_PREVENT_DEFAULT) return event.preventDefault();
+    exploded = true;
+  }
 };
 
 Explosion.prototype.tick = function() {
