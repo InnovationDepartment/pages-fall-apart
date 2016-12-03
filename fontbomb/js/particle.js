@@ -43,7 +43,7 @@ Particle.prototype.tick = function(blast) {
     distYS = distY * distY;
     distanceWithBlast = distXS + distYS;
     force = 10000000 / distanceWithBlast;
-    if (force > 50) force = 50;
+    if (force > 10) force = 10;
     rad = Math.asin(distYS / distanceWithBlast);
     forceY = Math.sin(rad) * force * (distY < 0 ? -1 : 1);
     forceX = Math.cos(rad) * force * (distX < 0 ? -1 : 1);
@@ -69,8 +69,7 @@ Particle.prototype.tick = function(blast) {
 Particle.prototype.addDraggable = function () {
   this.draggable = window.interact(this.elem).draggable({
     onstart: startMoveListener,
-    onmove: dragMoveListener,
-    inertia: true
+    onmove: dragMoveListener(this)
   })
 }
 
@@ -78,20 +77,20 @@ function startMoveListener (event) {
   var target = event.target
   target.style.webkitTransform = target.style.transform = "rotate(0deg)"
 }
-function dragMoveListener (event) {
-  var target = event.target,
-      // keep the dragged position in the data-x/data-y attributes
-      x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-      y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+function dragMoveListener (element) {
+  return function (event) {
+    var target = event.target,
+        // keep the dragged position in the data-x/data-y attributes
+        x = (parseFloat(target.getAttribute('data-x')) || element.transformX) + event.dx,
+        y = (parseFloat(target.getAttribute('data-y')) || element.transformY) + event.dy;
 
-  // translate the element
-  target.style.webkitTransform =
-  target.style.transform =
-    'translate(' + x + 'px, ' + y + 'px)';
+    // translate the element
+    target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
 
-  // update the posiion attributes
-  target.setAttribute('data-x', x);
-  target.setAttribute('data-y', y);
+    // update the posiion attributes
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+  }
 }
 
 Particle.name = 'Particle'
