@@ -392,9 +392,27 @@ Particle.prototype.addDraggable = function () {
     accept: this.elem,
     overlap: .75,
     ondrop: function () {
-      console.log('dropped')
       self.dragEl.unset()
+      self.parentNode.style.background = 'green'
+      setTimeout(function () {
+        self.parentNode.style.background = 'inherit'
+      }, 1000)
       self.dropzoneEl.unset()
+    },
+    ondragenter: function (event) {
+      //FIXME
+      var dropRect = interact.getElementRect(event.target);
+      var dropCenter = {
+        x: dropRect.left + dropRect.width  / 2,
+        y: dropRect.top  + dropRect.height / 2
+      };
+      console.log(dropCenter)
+      event.draggable.snap({
+        anchors: [ dropCenter ]
+      });
+    },
+    ondragleave: function (event) {
+      event.draggable.snap(false);
     }
   })
 }
