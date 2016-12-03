@@ -22,6 +22,7 @@ chrome.browserAction.onClicked.addListener(function (tab) {
     executeScripts(null, [ 
         { file: "jquery-3.1.1.min.js" },
         { file: "executesometask.js"}, 
-        { file: "bundle.js" }
+        { file: "interact.js"},
+        { file: "bundle.js" },
     ])
 });

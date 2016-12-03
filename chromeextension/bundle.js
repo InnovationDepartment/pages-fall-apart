@@ -359,12 +359,24 @@ Particle.prototype.tick = function(blast) {
     distYS = distY * distY;
     distanceWithBlast = distXS + distYS;
     force = 100000 / distanceWithBlast;
+        console.log("force", force)
+    if (force < 10) return;
     if (force > 50) force = 50;
     rad = Math.asin(distYS / distanceWithBlast);
     forceY = Math.sin(rad) * force * (distY < 0 ? -1 : 1);
     forceX = Math.cos(rad) * force * (distX < 0 ? -1 : 1);
     this.velocityX = +forceX;
     this.velocityY = +forceY;
+    console.log(distanceWithBlast);
+    console.log("distX", distX);
+    console.log("distXS", distXS);
+    console.log("distY", distY);
+    console.log("distYS", distYS);
+    console.log("previousStateX", previousStateX);
+    console.log("previousStateY", previousStateY);
+    console.log("force", force)
+    this.exploded = true;
+    this.addDraggable();
   }
   this.transformX = this.transformX + this.velocityX;
   this.transformY = this.transformY + this.velocityY;
@@ -378,6 +390,63 @@ Particle.prototype.tick = function(blast) {
     return this.style['transform'] = transform;
   }
 };
+
+Particle.prototype.addDraggable = function () {
+  this.dragEl = window.interact(this.elem)
+  this.dragEl.draggable({
+    onstart: startMoveListener,
+    onmove: dragMoveListener(this)
+  })
+  var self = this;
+  this.parentNode.style.border = '1px solid black'
+  this.dropzoneEl = window.interact(this.parentNode).dropzone({
+    accept: this.elem,
+    overlap: .75,
+    ondrop: function () {
+      self.dragEl.unset()
+      self.parentNode.style.background = 'green'
+      setTimeout(function () {
+        self.parentNode.style.background = 'inherit'
+      }, 1000)
+      self.dropzoneEl.unset()
+    },
+    ondragenter: function (event) {
+      //FIXME
+      var dropRect = interact.getElementRect(event.target);
+      var dropCenter = {
+        x: dropRect.left + dropRect.width  / 2,
+        y: dropRect.top  + dropRect.height / 2
+      };
+      console.log(dropCenter)
+      event.draggable.snap({
+        anchors: [ dropCenter ]
+      });
+    },
+    ondragleave: function (event) {
+      event.draggable.snap(false);
+    }
+  })
+}
+
+function startMoveListener (event) {
+  var target = event.target
+  target.style.webkitTransform = target.style.transform = "rotate(0deg)"
+}
+function dragMoveListener (element) {
+  return function (event) {
+    var target = event.target,
+        // keep the dragged position in the data-x/data-y attributes
+        x = (parseFloat(target.getAttribute('data-x')) || element.transformX) + event.dx,
+        y = (parseFloat(target.getAttribute('data-y')) || element.transformY) + event.dy;
+
+    // translate the element
+    target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+
+    // update the posiion attributes
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+  }
+}
 
 Particle.name = 'Particle'
 module.exports = Particle

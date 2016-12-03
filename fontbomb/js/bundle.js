@@ -365,6 +365,7 @@ Particle.prototype.tick = function(blast) {
     forceX = Math.cos(rad) * force * (distX < 0 ? -1 : 1);
     this.velocityX = +forceX;
     this.velocityY = +forceY;
+    console.log(distanceWithBlast);
     this.exploded = true;
     this.addDraggable();
   }
@@ -387,7 +388,8 @@ Particle.prototype.addDraggable = function () {
     onstart: startMoveListener,
     onmove: dragMoveListener(this)
   })
-  var self = this
+  var self = this;
+  this.parentNode.style.border = '1px solid black'
   this.dropzoneEl = window.interact(this.parentNode).dropzone({
     accept: this.elem,
     overlap: .75,
