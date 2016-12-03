@@ -76,9 +76,8 @@ Particle.prototype.addDraggable = function () {
     accept: this.elem,
     overlap: .75,
     ondrop: function () {
-      console.log('dropped')
       self.dragEl.unset()
-      self.dropzoneEl
+      self.dropzoneEl.unset()
     }
   })
 }
