@@ -262,6 +262,7 @@
     }
 
     Explosion.prototype.explosifyNodes = function(nodes) {
+
       var node, _j, _len2, _results;
       _results = [];
       for (_j = 0, _len2 = nodes.length; _j < _len2; _j++) {
@@ -278,8 +279,14 @@
         name = _ref2[_j];
         if (node.nodeName.toLowerCase() === name) return;
       }
+
       switch (node.nodeType) {
         case 1:
+          if (node.nodeName.toLowerCase() === "img") {
+            newNode = document.createElement("particles");
+            newNode.innerHTML = this.explosifyEl(node);
+            return node.parentNode.replaceChild(newNode, node);
+          }
           return this.explosifyNodes(node.childNodes);
         case 3:
           if (!/^\s*$/.test(node.nodeValue)) {
@@ -293,6 +300,12 @@
           }
       }
     };
+
+    Explosion.prototype.explosifyEl = function(string) {
+      // _results = [];
+      return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + string.outerHTML + "</particle></word>"
+
+    }
 
     Explosion.prototype.explosifyText = function(string) {
       var char, chars, index;
