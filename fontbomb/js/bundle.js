@@ -357,6 +357,9 @@ Particle.prototype.tick = function(blast) {
     forceX = Math.cos(rad) * force * (distX < 0 ? -1 : 1);
     this.velocityX = +forceX;
     this.velocityY = +forceY;
+    if (this.velocityX > 1 || this.velocityY > 1) {
+      this.addDraggable()
+    }
   }
   this.transformX = this.transformX + this.velocityX;
   this.transformY = this.transformY + this.velocityY;
@@ -370,6 +373,34 @@ Particle.prototype.tick = function(blast) {
     return this.style['transform'] = transform;
   }
 };
+
+Particle.prototype.addDraggable = function () {
+  this.draggable = window.interact(this.elem).draggable({
+    onstart: startMoveListener,
+    onmove: dragMoveListener,
+    inertia: true
+  })
+}
+
+function startMoveListener (event) {
+  var target = event.target
+  target.style.webkitTransform = target.style.transform = "rotate(0deg)"
+}
+function dragMoveListener (event) {
+  var target = event.target,
+      // keep the dragged position in the data-x/data-y attributes
+      x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+      y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+  // translate the element
+  target.style.webkitTransform =
+  target.style.transform =
+    'translate(' + x + 'px, ' + y + 'px)';
+
+  // update the posiion attributes
+  target.setAttribute('data-x', x);
+  target.setAttribute('data-y', y);
+}
 
 Particle.name = 'Particle'
 module.exports = Particle
