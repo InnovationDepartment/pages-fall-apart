@@ -359,7 +359,6 @@ Particle.prototype.tick = function(blast) {
     distYS = distY * distY;
     distanceWithBlast = distXS + distYS;
     force = 100000 / distanceWithBlast;
-        console.log("force", force)
     if (force < 10) return;
     if (force > 50) force = 50;
     rad = Math.asin(distYS / distanceWithBlast);
@@ -367,14 +366,6 @@ Particle.prototype.tick = function(blast) {
     forceX = Math.cos(rad) * force * (distX < 0 ? -1 : 1);
     this.velocityX = +forceX;
     this.velocityY = +forceY;
-    console.log(distanceWithBlast);
-    console.log("distX", distX);
-    console.log("distXS", distXS);
-    console.log("distY", distY);
-    console.log("distYS", distYS);
-    console.log("previousStateX", previousStateX);
-    console.log("previousStateY", previousStateY);
-    console.log("force", force)
     this.exploded = true;
     this.addDraggable();
   }
