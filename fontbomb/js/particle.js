@@ -83,6 +83,13 @@ Particle.prototype.addDraggable = function () {
   })
   var self = this;
   this.parentNode.style.border = '1px solid black'
+  this.dragEl.snap({
+    mode: 'anchor',
+    anchors: [],
+    range: Infinity,
+    elementOrigin: { x: 0.5, y: 0.5 },
+    endOnly: true
+  });
   this.dropzoneEl = window.interact(this.parentNode).dropzone({
     accept: this.elem,
     overlap: .75,
@@ -101,7 +108,6 @@ Particle.prototype.addDraggable = function () {
         x: dropRect.left + dropRect.width  / 2,
         y: dropRect.top  + dropRect.height / 2
       };
-      console.log(dropCenter)
       event.draggable.snap({
         anchors: [ dropCenter ]
       });

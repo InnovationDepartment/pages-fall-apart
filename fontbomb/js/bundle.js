@@ -359,6 +359,8 @@ Particle.prototype.tick = function(blast) {
     distYS = distY * distY;
     distanceWithBlast = distXS + distYS;
     force = 100000 / distanceWithBlast;
+        console.log("force", force)
+    if (force < 10) return;
     if (force > 50) force = 50;
     rad = Math.asin(distYS / distanceWithBlast);
     forceY = Math.sin(rad) * force * (distY < 0 ? -1 : 1);
@@ -366,6 +368,13 @@ Particle.prototype.tick = function(blast) {
     this.velocityX = +forceX;
     this.velocityY = +forceY;
     console.log(distanceWithBlast);
+    console.log("distX", distX);
+    console.log("distXS", distXS);
+    console.log("distY", distY);
+    console.log("distYS", distYS);
+    console.log("previousStateX", previousStateX);
+    console.log("previousStateY", previousStateY);
+    console.log("force", force)
     this.exploded = true;
     this.addDraggable();
   }
@@ -390,6 +399,13 @@ Particle.prototype.addDraggable = function () {
   })
   var self = this;
   this.parentNode.style.border = '1px solid black'
+  this.dragEl.snap({
+    mode: 'anchor',
+    anchors: [],
+    range: Infinity,
+    elementOrigin: { x: 0.5, y: 0.5 },
+    endOnly: true
+  });
   this.dropzoneEl = window.interact(this.parentNode).dropzone({
     accept: this.elem,
     overlap: .75,
@@ -408,7 +424,6 @@ Particle.prototype.addDraggable = function () {
         x: dropRect.left + dropRect.width  / 2,
         y: dropRect.top  + dropRect.height / 2
       };
-      console.log(dropCenter)
       event.draggable.snap({
         anchors: [ dropCenter ]
       });
