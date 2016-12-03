@@ -1,0 +1,26 @@
+{
+  "name": "Page Blue",
+  "version": "2.0",
+  "permissions": [
+    "activeTab"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"]
+    }
+  ],
+  "browser_action": {
+    "default_title": "Blow the Page Up",
+    "default_icon": "icon.png"
+  },
+  "web_accessible_resources": [
+    "jquery-3.1.1.min.js",
+    "consolelog.js"
+  ],
+  "manifest_version": 2
+}
