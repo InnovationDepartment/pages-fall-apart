@@ -43,15 +43,15 @@ Particle.prototype.tick = function(blast) {
     distYS = distY * distY;
     distanceWithBlast = distXS + distYS;
     force = 10000000 / distanceWithBlast;
-    if (force > 10) force = 10;
+    //FIXME: Put back to 50
+    if (force > 20) force = 20;
     rad = Math.asin(distYS / distanceWithBlast);
     forceY = Math.sin(rad) * force * (distY < 0 ? -1 : 1);
     forceX = Math.cos(rad) * force * (distX < 0 ? -1 : 1);
     this.velocityX = +forceX;
     this.velocityY = +forceY;
-    if (this.velocityX > 1 || this.velocityY > 1) {
-      this.addDraggable()
-    }
+    this.exploded = true;
+    this.addDraggable();
   }
   this.transformX = this.transformX + this.velocityX;
   this.transformY = this.transformY + this.velocityY;
@@ -67,9 +67,19 @@ Particle.prototype.tick = function(blast) {
 };
 
 Particle.prototype.addDraggable = function () {
-  this.draggable = window.interact(this.elem).draggable({
+  this.dragEl = window.interact(this.elem)
+  this.dragEl.draggable({
     onstart: startMoveListener,
     onmove: dragMoveListener(this)
+  })
+  var self = this
+  window.interact(this.parentNode).dropzone({
+    accept: this.elem,
+    overlap: .75,
+    ondrop: function () {
+      console.log('dropped')
+      self.dragEl.unset()
+    }
   })
 }
 
