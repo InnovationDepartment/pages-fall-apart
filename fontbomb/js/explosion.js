@@ -45,23 +45,7 @@ function Explosion() {
     style = document.createElement('style');
     style.innerHTML = "div#fontBombConfirmation {\n  position: absolute;\n  top: -200px;\n  left: 0px;\n  right: 0px;\n  bottom: none;\n  width: 100%;\n  padding: 18px;\n  margin: 0px;\n  background: #e8e8e8;\n  text-align: center;\n  font-size: 14px;\n  line-height: 14px;\n  font-family: verdana, sans-serif;\n  color: #000;\n  -webkit-transition: all 1s ease-in-out;\n  -moz-transition: all 1s ease-in-out;\n  -o-transition: all 1s ease-in-out;\n  -ms-transition: all 1s ease-in-out;\n  transition: all 1s ease-in-out;\n  -webkit-box-shadow: 0px 3px 3px rgba(0,0,0,0.20);\n  -moz-box-shadow: 0px 3px 3px rgba(0,0,0,0.20);\n  box-shadow: 0px 3px 3px rgba(0,0,0,0.20);\n  z-index: 100000002;\n}\ndiv#fontBombConfirmation span,div#fontBombConfirmation a {\n  color: #fe3a1a;\n}\ndiv#fontBombConfirmation.show {\n  top:0px;\n  display:block;\n}";
     document.head.appendChild(style);
-    this.confirmation = document.createElement("div");
-    this.confirmation.id = 'fontBombConfirmation';
-    this.confirmation.innerHTML = "<span style='font-weight:bold;'>fontBomb loaded!</span> Click anywhere to destroy " + (document.title.substring(0, 50));
-    this.body.appendChild(this.confirmation);
-    setTimeout(function() {
-      return _this.confirmation.className = 'show';
-    }, 10);
-    setTimeout(function() {
-      _this.confirmation.className = '';
-      return setTimeout(function() {
-        _this.confirmation.innerHTML = "If you think fontBomb is a blast, follow me on twitter <a href='http://www.twitter.com/plehoux'>@plehoux</a> for my next experiment!";
-        _this.confirmation.className = 'show';
-        return setTimeout(function() {
-          return _this.confirmation.className = '';
-        }, 20000);
-      }, 5000);
-    }, 5000);
+
   }
 }
 
@@ -118,7 +102,8 @@ Explosion.prototype.explosifyText = function(string) {
     for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
       char = _ref2[index];
       if (!/^\s*$/.test(char)) {
-        _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
+        // _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
+        _results.push(char)
       } else {
         _results.push('&nbsp;');
       }
@@ -133,7 +118,7 @@ Explosion.prototype.explosifyText = function(string) {
     for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
       char = _ref2[index];
       if (!/^\s*$/.test(char)) {
-        _results.push("<word style='white-space:nowrap'>" + char + "</word>");
+        _results.push("<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char + "</particle></word>");
       } else {
         _results.push(char);
       }
