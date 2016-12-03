@@ -78,22 +78,16 @@ var Bomb = require('./bomb')
 
 function Explosion() {
   this.tick = __bind(this.tick, this);
-
   this.dropBomb = __bind(this.dropBomb, this);
-
-  var char, confirmation, style, _ref,
+  var char, confirmation, style, _ref2,
     _this = this;
-  if (window.FONTBOMB_LOADED) {
-    return;
-  }
+  if (window.FONTBOMB_LOADED) return;
   window.FONTBOMB_LOADED = true;
-  if (!window.FONTBOMB_HIDE_CONFIRMATION) {
-    confirmation = true;
-  }
+  if (!window.FONTBOMB_HIDE_CONFIRMATION) confirmation = true;
   this.bombs = [];
   this.body = document.getElementsByTagName("body")[0];
-  if ((_ref = this.body) != null) {
-    _ref.onclick = function(event) {
+  if ((_ref2 = this.body) != null) {
+    _ref2.onclick = function(event) {
       return _this.dropBomb(event);
     };
   }
@@ -105,18 +99,16 @@ function Explosion() {
     return _this.touchMoveCount++;
   });
   this.body.addEventListener("touchend", function(event) {
-    if (_this.touchMoveCount < 2) {
-      _this.dropBomb(_this.touchEvent);
-    }
+    if (_this.touchMoveCount < 2) _this.dropBomb(_this.touchEvent);
     return _this.touchMoveCount = 0;
   });
   this.explosifyNodes(this.body.childNodes);
   this.chars = (function() {
-    var _i, _len, _ref1, _results;
-    _ref1 = document.getElementsByTagName('particle');
+    var _j, _len2, _ref3, _results;
+    _ref3 = document.getElementsByTagName('particle');
     _results = [];
-    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-      char = _ref1[_i];
+    for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
+      char = _ref3[_j];
       _results.push(new Particle(char, this.body));
     }
     return _results;
@@ -147,26 +139,31 @@ function Explosion() {
 }
 
 Explosion.prototype.explosifyNodes = function(nodes) {
-  var node, _i, _len, _results;
+
+  var node, _j, _len2, _results;
   _results = [];
-  for (_i = 0, _len = nodes.length; _i < _len; _i++) {
-    node = nodes[_i];
+  for (_j = 0, _len2 = nodes.length; _j < _len2; _j++) {
+    node = nodes[_j];
     _results.push(this.explosifyNode(node));
   }
   return _results;
 };
 
 Explosion.prototype.explosifyNode = function(node) {
-  var name, newNode, _i, _len, _ref;
-  _ref = ['script', 'style', 'iframe', 'canvas', 'video', 'audio', 'textarea', 'embed', 'object', 'select', 'area', 'map', 'input'];
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    name = _ref[_i];
-    if (node.nodeName.toLowerCase() === name) {
-      return;
-    }
+  var name, newNode, _j, _len2, _ref2;
+  _ref2 = ['script', 'style', 'canvas', 'video', 'audio', 'textarea', 'embed', 'object', 'select', 'area', 'map', 'input'];
+  for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+    name = _ref2[_j];
+    if (node.nodeName.toLowerCase() === name) return;
   }
+
   switch (node.nodeType) {
     case 1:
+      if (node.nodeName.toLowerCase() === "img" || node.nodeName.toLowerCase() === "iframe") {
+        newNode = document.createElement("particles");
+        newNode.innerHTML = this.explosifyEl(node);
+        return node.parentNode.replaceChild(newNode, node);
+      }
       return this.explosifyNodes(node.childNodes);
     case 3:
       if (!/^\s*$/.test(node.nodeValue)) {
@@ -181,14 +178,18 @@ Explosion.prototype.explosifyNode = function(node) {
   }
 };
 
+Explosion.prototype.explosifyEl = function(string) {
+  return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + string.outerHTML + "</particle></word>"
+}
+
 Explosion.prototype.explosifyText = function(string) {
   var char, chars, index;
   chars = (function() {
-    var _i, _len, _ref, _results;
-    _ref = string.split('');
+    var _len2, _ref2, _results;
+    _ref2 = string.split('');
     _results = [];
-    for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
-      char = _ref[index];
+    for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
+      char = _ref2[index];
       if (!/^\s*$/.test(char)) {
         _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
       } else {
@@ -199,11 +200,11 @@ Explosion.prototype.explosifyText = function(string) {
   })();
   chars = chars.join('');
   chars = (function() {
-    var _i, _len, _ref, _results;
-    _ref = chars.split('&nbsp;');
+    var _len2, _ref2, _results;
+    _ref2 = chars.split('&nbsp;');
     _results = [];
-    for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
-      char = _ref[index];
+    for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
+      char = _ref2[index];
       if (!/^\s*$/.test(char)) {
         _results.push("<word style='white-space:nowrap'>" + char + "</word>");
       } else {
@@ -219,37 +220,36 @@ Explosion.prototype.dropBomb = function(event) {
   var pos;
   pos = window.findClickPos(event);
   this.bombs.push(new Bomb(pos.x, pos.y));
-  if (window.FONTBOMB_PREVENT_DEFAULT) {
-    return event.preventDefault();
-  }
+  if (window.FONTBOMB_PREVENT_DEFAULT) return event.preventDefault();
 };
 
 Explosion.prototype.tick = function() {
-  var bomb, char, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
-  _ref = this.bombs;
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    bomb = _ref[_i];
+  var bomb, char, _j, _k, _l, _len2, _len3, _len4, _ref2, _ref3, _ref4;
+  _ref2 = this.bombs;
+  for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+    bomb = _ref2[_j];
     if (bomb.state === 'explose') {
       bomb.exploded();
       this.blast = bomb.pos;
     }
   }
   if (this.blast != null) {
-    _ref1 = this.chars;
-    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-      char = _ref1[_j];
+    _ref3 = this.chars;
+    for (_k = 0, _len3 = _ref3.length; _k < _len3; _k++) {
+      char = _ref3[_k];
       char.tick(this.blast);
     }
     this.blast = null;
   } else {
-    _ref2 = this.chars;
-    for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-      char = _ref2[_k];
+    _ref4 = this.chars;
+    for (_l = 0, _len4 = _ref4.length; _l < _len4; _l++) {
+      char = _ref4[_l];
       char.tick();
     }
   }
   return window.requestAnimationFrame(this.tick);
 };
+
 Explosion.name = 'Explosion';
 module.exports = Explosion
 
@@ -315,8 +315,10 @@ w.getOffset = function(el) {
     left: _x + body.scrollLeft
   };
 };
+
 var Explosion = require('./explosion')
 new Explosion()
+
 
 },{"./explosion":3}],5:[function(require,module,exports){
 // Generated by CoffeeScript 1.3.1

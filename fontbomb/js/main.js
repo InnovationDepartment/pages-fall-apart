@@ -59,5 +59,7 @@ w.getOffset = function(el) {
     left: _x + body.scrollLeft
   };
 };
+
 var Explosion = require('./explosion')
 new Explosion()
+
