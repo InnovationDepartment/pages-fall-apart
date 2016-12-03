@@ -73,12 +73,13 @@ Particle.prototype.addDraggable = function () {
     onmove: dragMoveListener(this)
   })
   var self = this
-  window.interact(this.parentNode).dropzone({
+  this.dropzoneEl = window.interact(this.parentNode).dropzone({
     accept: this.elem,
     overlap: .75,
     ondrop: function () {
       console.log('dropped')
       self.dragEl.unset()
+      self.dropzoneEl
     }
   })
 }
