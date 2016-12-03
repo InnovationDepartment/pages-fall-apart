@@ -387,6 +387,14 @@ Particle.prototype.addDraggable = function () {
     onstart: startMoveListener,
     onmove: dragMoveListener(this)
   })
+  this.dragEl.snap({
+    mode: 'anchor',
+    anchors: [],
+    range: Infinity,
+    elementOrigin: { x: 0.5, y: 0.5 },
+    endOnly: true
+  });
+
   var self = this
   this.dropzoneEl = window.interact(this.parentNode).dropzone({
     accept: this.elem,
@@ -406,7 +414,6 @@ Particle.prototype.addDraggable = function () {
         x: dropRect.left + dropRect.width  / 2,
         y: dropRect.top  + dropRect.height / 2
       };
-      console.log(dropCenter)
       event.draggable.snap({
         anchors: [ dropCenter ]
       });
