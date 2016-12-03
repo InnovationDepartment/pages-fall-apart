@@ -102,7 +102,8 @@ Explosion.prototype.explosifyText = function(string) {
     for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
       char = _ref2[index];
       if (!/^\s*$/.test(char)) {
-        _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
+        // _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
+        _results.push(char)
       } else {
         _results.push('&nbsp;');
       }
@@ -117,7 +118,7 @@ Explosion.prototype.explosifyText = function(string) {
     for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
       char = _ref2[index];
       if (!/^\s*$/.test(char)) {
-        _results.push("<word style='white-space:nowrap'>" + char + "</word>");
+        _results.push("<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char + "</particle></word>");
       } else {
         _results.push(char);
       }
