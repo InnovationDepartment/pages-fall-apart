@@ -94,38 +94,40 @@ Explosion.prototype.explosifyEl = function(string) {
 }
 
 Explosion.prototype.explosifyText = function(string) {
-  var char, chars, index;
-  chars = (function() {
-    var _len2, _ref2, _results;
-    _ref2 = string.split('');
-    _results = [];
-    for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
-      char = _ref2[index];
-      if (!/^\s*$/.test(char)) {
-        // _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
-        _results.push(char)
-      } else {
-        _results.push('&nbsp;');
-      }
-    }
-    return _results;
-  })();
-  chars = chars.join('');
-  chars = (function() {
-    var _len2, _ref2, _results;
-    _ref2 = chars.split('&nbsp;');
-    _results = [];
-    for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
-      char = _ref2[index];
-      if (!/^\s*$/.test(char)) {
-        _results.push("<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char + "</particle></word>");
-      } else {
-        _results.push(char);
-      }
-    }
-    return _results;
-  })();
-  return chars.join(' ');
+  // wrap each phrase / block as a 'word'
+  return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + string + '&nbsp;' + "</particle></word>"
+
+  // chars = (function() {
+  //   var _len2, _ref2, _results;
+  //   _ref2 = string.split('');
+  //   _results = [];
+  //   for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
+  //     char = _ref2[index];
+  //     if (!/^\s*$/.test(char)) {
+  //       // _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
+  //       _results.push(char)
+  //     } else {
+  //       _results.push('&nbsp;');
+  //     }
+  //   }
+  //   return _results;
+  // })();
+  // chars = chars.join('');
+  // chars = (function() {
+  //   var _len2, _ref2, _results;
+  //   _ref2 = chars.split('&nbsp;');
+  //   _results = [];
+  //   for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
+  //     char = _ref2[index];
+  //     if (!/^\s*$/.test(char)) {
+  //       _results.push("<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char + "</particle></word>");
+  //     } else {
+  //       _results.push(char);
+  //     }
+  //   }
+  //   return _results;
+  // })();
+  // return chars.join(' ');
 };
 
 Explosion.prototype.dropBomb = function(event) {
