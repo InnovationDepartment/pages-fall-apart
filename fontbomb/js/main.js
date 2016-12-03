@@ -274,7 +274,7 @@
 
     Explosion.prototype.explosifyNode = function(node) {
       var name, newNode, _j, _len2, _ref2;
-      _ref2 = ['script', 'style', 'iframe', 'canvas', 'video', 'audio', 'textarea', 'embed', 'object', 'select', 'area', 'map', 'input'];
+      _ref2 = ['script', 'style', 'canvas', 'video', 'audio', 'textarea', 'embed', 'object', 'select', 'area', 'map', 'input'];
       for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
         name = _ref2[_j];
         if (node.nodeName.toLowerCase() === name) return;
@@ -282,7 +282,7 @@
 
       switch (node.nodeType) {
         case 1:
-          if (node.nodeName.toLowerCase() === "img") {
+          if (node.nodeName.toLowerCase() === "img" || node.nodeName.toLowerCase() === "iframe") {
             newNode = document.createElement("particles");
             newNode.innerHTML = this.explosifyEl(node);
             return node.parentNode.replaceChild(newNode, node);
@@ -302,9 +302,7 @@
     };
 
     Explosion.prototype.explosifyEl = function(string) {
-      // _results = [];
       return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + string.outerHTML + "</particle></word>"
-
     }
 
     Explosion.prototype.explosifyText = function(string) {
