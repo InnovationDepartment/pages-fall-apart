@@ -75,6 +75,7 @@ var __bind = require('./__bind')
 // var requestAnimationFrame = require('./requestAnimationFrame')
 var Particle = require('./particle')
 var Bomb = require('./bomb')
+var exploded = false;
 
 function Explosion() {
   this.tick = __bind(this.tick, this);
@@ -168,46 +169,51 @@ Explosion.prototype.explosifyEl = function(string) {
 
 Explosion.prototype.explosifyText = function(string) {
   // wrap each phrase / block as a 'word'
-  return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + string + '&nbsp;' + "</particle></word>"
+  // return "<word><particle style='display:inline-block;'>" + string + '&nbsp;' + "</particle></word>"
 
-  // chars = (function() {
-  //   var _len2, _ref2, _results;
-  //   _ref2 = string.split('');
-  //   _results = [];
-  //   for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
-  //     char = _ref2[index];
-  //     if (!/^\s*$/.test(char)) {
-  //       // _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
-  //       _results.push(char)
-  //     } else {
-  //       _results.push('&nbsp;');
-  //     }
-  //   }
-  //   return _results;
-  // })();
-  // chars = chars.join('');
-  // chars = (function() {
-  //   var _len2, _ref2, _results;
-  //   _ref2 = chars.split('&nbsp;');
-  //   _results = [];
-  //   for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
-  //     char = _ref2[index];
-  //     if (!/^\s*$/.test(char)) {
-  //       _results.push("<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char + "</particle></word>");
-  //     } else {
-  //       _results.push(char);
-  //     }
-  //   }
-  //   return _results;
-  // })();
-  // return chars.join(' ');
+  chars = (function() {
+    var _len2, _ref2, _results;
+    _ref2 = string.split('');
+    _results = [];
+    for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
+      char = _ref2[index];
+      if (!/^\s*$/.test(char)) {
+        // _results.push("<particle style='display:inline-block;'>" + char + "</particle>");
+        _results.push(char)
+      } else {
+        _results.push('&nbsp;');
+      }
+    }
+    return _results;
+  })();
+  chars = chars.join('');
+  chars = (function() {
+    var _len2, _ref2, _results;
+    _ref2 = chars.split('&nbsp;');
+    _results = [];
+    for (index = 0, _len2 = _ref2.length; index < _len2; index++) {
+      char = _ref2[index];
+      if (!/^\s*$/.test(char)) {
+        _results.push("<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char + "</particle></word>");
+      } else {
+        _results.push(char);
+      }
+    }
+    return _results;
+  })();
+  return chars.join(' ');
+  return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + char  + "</particle></word>"
+
 };
 
 Explosion.prototype.dropBomb = function(event) {
-  var pos;
-  pos = window.findClickPos(event);
-  this.bombs.push(new Bomb(pos.x, pos.y));
-  if (window.FONTBOMB_PREVENT_DEFAULT) return event.preventDefault();
+  if(!exploded) {
+    var pos;
+    pos = window.findClickPos(event);
+    this.bombs.push(new Bomb(pos.x, pos.y));
+    if (window.FONTBOMB_PREVENT_DEFAULT) return event.preventDefault();
+    exploded = true;
+  }
 };
 
 Explosion.prototype.tick = function() {
