@@ -167,8 +167,7 @@ Explosion.prototype.explosifyEl = function(string) {
 }
 
 Explosion.prototype.explosifyText = function(string) {
-  var char, chars, index;
-
+  // wrap each phrase / block as a 'word'
   return "<word style='white-space:nowrap'><particle style='display:inline-block;'>" + string + '&nbsp;' + "</particle></word>"
 
   // chars = (function() {
